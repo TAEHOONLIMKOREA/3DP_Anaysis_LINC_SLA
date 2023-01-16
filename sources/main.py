@@ -10,6 +10,11 @@ if __name__ == '__main__':
     # 판다스로 읽기
     # df = pd.read_csv('data/20221121_djtp_sensordata.csv')
     # print(df)
+    #
+    # cols = ['REG_DATE','REG_TIME']
+    # df['TIMESTAMP'] = df[cols].apply(lambda row: ' '.join(row.values.astype(str), axis=1)
+    #
+    #
     # row_1 = df.iloc[0]
     # print(row_1[0] + 'T' + row_1[7] + 'Z')
 
@@ -20,11 +25,12 @@ if __name__ == '__main__':
     columns = next(csvreader)
     fist_value = next(csvreader)
     # measurement = fist_value[0]+fist_value[7]+fist_value[1]
-    measurement = fist_value[1]
+    measurement = '220928_221121_' + fist_value[7]
+    host = 'keties.iptime.org'
+    port = 55586
 
-
-    client = InfluxDBClient(host="localhost", port=8086)
-    dbname = 'lincsolution'
+    client = InfluxDBClient(host=host, port=port)
+    dbname = '220928_221121_SLA_Link'
 
     print("Create database: " + dbname)
     client.drop_database(dbname)
@@ -58,9 +64,6 @@ if __name__ == '__main__':
         ]
         print("Write points: {0}".format(point))
         client.write_points(point, database=dbname)
-
-
-
 
 
 
