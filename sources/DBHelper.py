@@ -10,7 +10,7 @@ port = 55586
 user = 'honeyb'
 passwd = '12345'
 protocol = 'line'
-dbname = 'HBNU_CMET ATOMm-4000'
+dbname = 'LINCSOLUTION_CMET_ATOMm-4000'
 measurement = '20221121_0047'
 
 
@@ -27,7 +27,7 @@ def data_load_pandas(file_path):
     df = df.reset_index()
     # 'REG_TIME'을 데이터프레임 인덱스로 지정
     df.set_index('REG_TIME', inplace=True)
-    df.to_csv('data/Processed_lincData.csv')
+    # df.to_csv('data/Processed_lincData.csv')
     print(df)
 
     return df
@@ -39,6 +39,13 @@ def data_insert(data):
     ret = next((item for item in list_db if item['name'] == dbname), None)
     if ret is None:
         client.create_database(dbname)
+
+    # check measurement list
+    list_measurements = client.get_list_measurements()
+    rtn = next((item for item in list_measurements if item['name'] == measurement), None)
+    if rtn is measurement:
+        client.drop_measurement(measurement)
+
     # Write data to measurement of 'HBNU_CMET ATOMm-4000' database.
     client.write_points(data, measurement, protocol=protocol)
 
